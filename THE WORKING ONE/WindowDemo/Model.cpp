@@ -198,50 +198,32 @@ bool Model::CollideWith(const Model& mod)
 	//if they are either one or the other
 	else if ((mod.collisionType == 2 || mod.collisionType == 3) && (collisionType == 2 || collisionType == 3))
 	{
-		float distance = 0;
-		// mod is on the left
-		if (mod.obj.trans.location.x < obj.trans.location.x)
+		float distance = 0.0f;
+		if (mod.collisionType == 3)
 		{
-			distance = pow((mod.obj.trans.location.z - obj.trans.location.z), 2) + pow((mod.obj.trans.location.x - obj.trans.location.x), 2) + pow((mod.obj.trans.location.y - obj.trans.location.y), 2);
-			if (mod.collisionType == 2)
+			for (int i = 0; i < 3; i++)
 			{
-				distance += pow((mod.obj.trans.location.x - mod.obj.trans.size.x) - obj.trans.location.x,2);
-			}
-			else 
-			{
-				distance += pow((obj.trans.location.x - obj.trans.size.x) - mod.obj.trans.location.x, 2);
-			}
-		}
-		//mod is on the right
-		else if (mod.obj.trans.location.x > obj.trans.location.x)
-		{
-			distance = pow((mod.obj.trans.location.z - obj.trans.location.z), 2) + pow((mod.obj.trans.location.x - obj.trans.location.x), 2) + pow((mod.obj.trans.location.y - obj.trans.location.y), 2);
-			if (mod.collisionType == 2)
-			{
-				distance += pow(obj.trans.location.x - (mod.obj.trans.location.x + mod.obj.trans.size.x) , 2);
-				
-			}
-			else
-			{
-				distance += pow((obj.trans.location.x - obj.trans.size.x) - mod.obj.trans.location.x, 2);
-			}
-		}
+				float min = mod.obj.trans.location[i] - mod.obj.trans.size[i];
+				float max = mod.obj.trans.location[i] + mod.obj.trans.size[i];
+				float v = obj.trans.location[i];
 
-		if (mod.collisionType == 2)
-		{
-			if (distance < pow(mod.obj.trans.size.x, 2))
-			{
-				return true;
+				if (v < min) distance += (min - v)*(min - v);
+				if (v > max) distance += (v - max)*(v - max);
 			}
 		}
 		else
 		{
-			if (distance < pow(obj.trans.size.x, 2))
+			for (int i = 0; i < 3; i++)
 			{
-				return true;
+				float min = obj.trans.location[i] - obj.trans.size[i];
+				float max = obj.trans.location[i] + obj.trans.size[i];
+				float v = mod.obj.trans.location[i];
+
+				if (v < min) distance += (min - v)*(min - v);
+				if (v > max) distance += (v - max)*(v - max);
 			}
 		}
-		return false;
+		return distance < mod.obj.trans.size.x * obj.trans.size.x;
 	}
 	// else return true
 	else 
