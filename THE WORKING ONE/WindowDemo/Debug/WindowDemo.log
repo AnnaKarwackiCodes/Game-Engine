@@ -1,0 +1,15 @@
+﻿  Model.cpp
+  Generating Code...
+  Compiling...
+  Engine.cpp
+\\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\the working one\windowdemo\engine.cpp(11): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+\\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\the working one\windowdemo\engine.cpp(15): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+\\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\the working one\windowdemo\engine.cpp(84): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\the working one\windowdemo\engine.cpp(88): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\the working one\windowdemo\engine.cpp(92): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\the working one\windowdemo\engine.cpp(96): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  Main.cpp
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  WindowDemo.vcxproj -> \\banner.main.ad.rit.edu\students\avk9238\IGMProfile\Desktop\THE WORKING ONE\Debug\WindowDemo.exe
