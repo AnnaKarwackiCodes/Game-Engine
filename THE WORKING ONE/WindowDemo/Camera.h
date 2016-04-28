@@ -35,7 +35,7 @@ public:
 	void uploadMat();
 	void FPSControl(GLFWwindow* GLFWwindowPtr);
 	glm::mat4 camMat;
-	glm::vec3 camLoc = { 0,0,2 };
+	glm::vec3 camLoc = { 0,0,1 };
 	glm::vec3 camRot = { 0,0,0 };
 	float pi = 3.14159;
 	glm::mat3 rotMat = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
@@ -52,6 +52,7 @@ public:
 	float aspect = (float)width / (float)height;
 	float zNear = .01f;
 	float zFar = 1000.f;
+	//zWherever you are
 	glm::mat4 perspectiveMat = glm::perspective(fovy, aspect, zNear, zFar);
 	glm::vec3 camVel;
 

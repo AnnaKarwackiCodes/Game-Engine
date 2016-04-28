@@ -17,7 +17,6 @@ namespace
 
 Camera::Camera()
 {
-	
 	cam.bod.mass = 0.0f;
 	cam.bod.force = glm::vec3(0, 0, 0);
 	cam.bod.velocity = glm::vec3(0, 0, 0);
@@ -42,11 +41,21 @@ void Camera::updateTrans(float delta)
 	glm::vec3 deltaR = cam.bod.velocity * delta;
 
 	cam.trans.location += deltaR;
+	camLoc += deltaR;
+	calcMat();
 }
 
 void Camera::calcMat()
 {
-	camMat = perspectiveMat *lookAtMat;
+	rotMat = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
+	eye = camLoc;
+	center = eye + rotMat * glm::vec3(0, 0, -1);
+	up = rotMat * glm::vec3(0, 1, 0);
+	lookAtMat = glm::lookAt(eye, center, up);
+
+
+	perspectiveMat = glm::perspective(fovy, aspect, zNear, zFar);
+	camMat = perspectiveMat * lookAtMat;
 }
 
 void Camera::uploadMat()

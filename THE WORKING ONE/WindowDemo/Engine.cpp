@@ -126,8 +126,8 @@ bool Engine::gameLoop()
 			mod2.TextureChange("door.jpg");
 		}
 
-		//cam.FPSControl(GLFWwindowPtr);
-		//cam.updateTrans(deltaTime);
+		cam.FPSControl(GLFWwindowPtr);
+		cam.updateTrans(deltaTime);
 		cam.calcMat();
 		cam.uploadMat();
 		
