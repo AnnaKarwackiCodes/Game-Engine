@@ -128,13 +128,11 @@ bool Engine::gameLoop()
 
 		//cam.FPSControl(GLFWwindowPtr);
 		//cam.updateTrans(deltaTime);
-		//cam.calcMat();
-		//cam.uploadMat();
+		cam.calcMat();
+		cam.uploadMat();
+		
 
-		glm::mat4 camMat = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
-
-		glUniformMatrix4fv(4, 1, GL_FALSE, &camMat[0][0]);
-
+		
 		mod1.render();
 		mod2.render();
 		mod3.render();

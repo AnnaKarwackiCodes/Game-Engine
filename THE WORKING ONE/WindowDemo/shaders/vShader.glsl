@@ -10,7 +10,7 @@ layout (location = 4) uniform mat4 cameraMat;
 void main()
 {
 	//gl_Position = worldTransform * vec4(position, 1);
-	gl_Position = cameraMat * worldTransform * position;
+	gl_Position = cameraMat * worldTransform * vec4(position,1);
 	fragUV = uvPosition;
 	
 }

@@ -17,6 +17,7 @@ namespace
 
 Camera::Camera()
 {
+	
 	cam.bod.mass = 0.0f;
 	cam.bod.force = glm::vec3(0, 0, 0);
 	cam.bod.velocity = glm::vec3(0, 0, 0);
@@ -45,22 +46,6 @@ void Camera::updateTrans(float delta)
 
 void Camera::calcMat()
 {
-	glm::mat3 rotMat = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
-	glm::vec3 eye = camLoc;
-	glm::vec3 center = eye + rotMat * glm::vec3(0, 0, -1);
-	glm::vec3 up = rotMat * glm::vec3(0, 1, 0);
-	glm::mat4 lookAtMat = glm::lookAt(eye, center, up);
-
-	// zoom or change aspect ratio
-	float zoom = 1.f;
-	int width = 800;
-	int height = 600;
-	float fovy = pi * .4f / zoom;
-	float aspect = (float)width / (float)height;
-	float zNear = .01f;
-	float zFar = 1000.f;
-	glm::mat4 perspectiveMat = glm::perspective(fovy, aspect, zNear, zFar);
-
 	camMat = perspectiveMat *lookAtMat;
 }
 
