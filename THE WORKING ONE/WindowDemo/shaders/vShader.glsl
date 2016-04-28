@@ -9,8 +9,8 @@ layout (location = 4) uniform mat4 cameraMat;
 
 void main()
 {
-	//gl_Position = worldTransform * vec4(position, 1);
-	gl_Position = cameraMat * uvPosition * position;
+	gl_Position = worldTransform * vec4(position, 1);
+	//gl_Position = cameraMat * worldTransform * position;
 	fragUV = uvPosition;
 	
 }

@@ -27,9 +27,9 @@ Camera::~Camera()
 {
 }
 
-void Camera::updateTrans(float delta, glm::vec3 dForce)
+void Camera::updateTrans(float delta)
 {
-	vec = (dForce / delta) + cam.bod.velocity;
+	vec = (camVel / delta) + cam.bod.velocity;
 
 	accel = (vec - cam.bod.velocity) / delta;
 
@@ -45,10 +45,28 @@ void Camera::updateTrans(float delta, glm::vec3 dForce)
 
 void Camera::calcMat()
 {
+	glm::mat3 rotMat = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
+	glm::vec3 eye = camLoc;
+	glm::vec3 center = eye + rotMat * glm::vec3(0, 0, -1);
+	glm::vec3 up = rotMat * glm::vec3(0, 1, 0);
+	glm::mat4 lookAtMat = glm::lookAt(eye, center, up);
+
+	// zoom or change aspect ratio
+	float zoom = 1.f;
+	int width = 800;
+	int height = 600;
+	float fovy = 3.14159f * .4f / zoom;
+	float aspect = (float)width / (float)height;
+	float zNear = .01f;
+	float zFar = 1000.f;
+	glm::mat4 perspectiveMat = glm::perspective(fovy, aspect, zNear, zFar);
+
+	camMat = perspectiveMat *lookAtMat;
 }
 
 void Camera::uploadMat()
 {
+	glUniformMatrix4fv(4, 1, GL_FALSE, &camMat[0][0]);
 }
 
 void Camera::FPSControl(GLFWwindow* GLFWwindowPtr)
@@ -65,7 +83,7 @@ void Camera::FPSControl(GLFWwindow* GLFWwindowPtr)
 	glfwSetCursorPos(GLFWwindowPtr, w * .5f, h * .5f);
 
 	// move with arrows
-	glm::vec3 camVel;
+	
 	glm::mat3 r = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
 	
 	if (keyIsDown[GLFW_KEY_LEFT])

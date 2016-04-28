@@ -13,6 +13,7 @@
 #include "ShaderManager.h"
 #include "Texture.h"
 #include "Model.h"
+#include "Camera.h"
 
 #include <iostream>
 #include <map>
@@ -29,6 +30,7 @@ private:
 	GLFWwindow* GLFWwindowPtr;
 	ShaderManager shade = ShaderManager();
 	Texture text = Texture();
+	Camera cam = Camera();
 	Model mod1 = Model("Textures/door.jpg", 3);
 	Model mod2 = Model("Textures/door.jpg", 3);
 	Model mod3 = Model("Textures/pika.png", 2);
