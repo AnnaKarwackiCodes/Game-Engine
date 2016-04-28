@@ -55,7 +55,7 @@ void Camera::calcMat()
 	float zoom = 1.f;
 	int width = 800;
 	int height = 600;
-	float fovy = 3.14159f * .4f / zoom;
+	float fovy = pi * .4f / zoom;
 	float aspect = (float)width / (float)height;
 	float zNear = .01f;
 	float zFar = 1000.f;

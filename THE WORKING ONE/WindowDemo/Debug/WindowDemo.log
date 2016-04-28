@@ -6,5 +6,4 @@
 \\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\github\game-engine\the working one\windowdemo\engine.cpp(90): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 \\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\github\game-engine\the working one\windowdemo\engine.cpp(94): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 \\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\github\game-engine\the working one\windowdemo\engine.cpp(98): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-\\banner.main.ad.rit.edu\students\avk9238\igmprofile\desktop\github\game-engine\the working one\windowdemo\engine.cpp(130): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   WindowDemo.vcxproj -> \\banner.main.ad.rit.edu\students\avk9238\IGMProfile\Desktop\GitHub\Game-Engine\THE WORKING ONE\Debug\WindowDemo.exe
