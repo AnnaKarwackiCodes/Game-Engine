@@ -127,27 +127,7 @@ bool Engine::gameLoop()
 		}
 
 		cam.FPSControl(GLFWwindowPtr);
-		if (keyIsDown[GLFW_KEY_LEFT])
-		{
-			cam.updateTrans(deltaTime, glm::vec3(glm::vec3(-1, 0, 0)));
-			cout << "left" << endl;
-		}
-		if (keyIsDown[GLFW_KEY_RIGHT])
-		{
-			cam.updateTrans(deltaTime, glm::vec3(glm::vec3(1, 0, 0)));
-			cout << "right" << endl;
-		}
-		if (keyIsDown[GLFW_KEY_UP])
-		{
-			cam.updateTrans(deltaTime, glm::vec3(glm::vec3(0, 0, -1)));
-			cout << "up" << endl;
-		}
-		if (keyIsDown[GLFW_KEY_DOWN])
-		{
-			cam.updateTrans(deltaTime, glm::vec3(glm::vec3(0, 0, 1)));
-			cout << "down" << endl;
-		}
-		cam.calcMat();
+		cam.updateTrans(deltaTime);
 		cam.uploadMat();
 		
 

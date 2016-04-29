@@ -32,12 +32,12 @@ public:
 	Camera();
 	~Camera();
 	glm::mat4 upload;
-	void updateTrans(float delta, glm::vec3 vel);
+	void updateTrans(float delta);
 	void calcMat();
 	void uploadMat();
 	void FPSControl(GLFWwindow* GLFWwindowPtr);
 	glm::mat4 camMat;
-	glm::vec3 camLoc = { 0,0,1 };
+	glm::vec3 camLoc = { 0,0,2 };
 	glm::vec3 camRot = { 0,0,0 };
 	float pi = 3.14159;
 	glm::mat3 rotMat = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);

@@ -27,14 +27,9 @@ Camera::~Camera()
 {
 }
 
-void Camera::updateTrans(float delta, glm::vec3 vel)
+void Camera::updateTrans(float delta)
 {
-	glm::mat3 r = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
-	float speed = 1.f;
-	if (camVel != glm::vec3())
-		camVel = glm::normalize(camVel) * speed;
-
-	vec = (vel / delta) + cam.bod.velocity;
+	vec = (camVel / delta) + cam.bod.velocity;
 
 	accel = (vec - cam.bod.velocity) / delta;
 
@@ -46,12 +41,11 @@ void Camera::updateTrans(float delta, glm::vec3 vel)
 	glm::vec3 deltaR = cam.bod.velocity * delta;
 
 	cam.trans.location += deltaR;
-	calcMat();
 }
 
 void Camera::calcMat()
 {
-	rotMat = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
+	rotMat = (glm::mat3)glm::yawPitchRoll(cam.trans.rotation.y, cam.trans.rotation.x, cam.trans.rotation.z);
 	eye = camLoc;
 	center = eye + rotMat * glm::vec3(0, 0, -1);
 	up = rotMat * glm::vec3(0, 1, 0);
@@ -60,10 +54,14 @@ void Camera::calcMat()
 
 	perspectiveMat = glm::perspective(fovy, aspect, zNear, zFar);
 	camMat = perspectiveMat * lookAtMat;
+	cam.trans.transMat = glm::translate(cam.trans.location) *
+		glm::yawPitchRoll(cam.trans.rotation.x, cam.trans.rotation.y, cam.trans.rotation.z)*
+		glm::scale(cam.trans.size);
 }
 
 void Camera::uploadMat()
 {
+	//glUniformMatrix4fv(4, 1, GL_FALSE, &cam.trans.transMat[0][0]);
 	glUniformMatrix4fv(4, 1, GL_FALSE, &camMat[0][0]);
 }
 
@@ -75,36 +73,38 @@ void Camera::FPSControl(GLFWwindow* GLFWwindowPtr)
 	double x, y;
 	glfwGetCursorPos(GLFWwindowPtr, &x, &y);
 	
-	camRot.y -= sens *(x - w * .5f); //yaw
-	camRot.x -= sens * (y - h * .5f);// pitch
-	camRot.x = glm::clamp(camRot.x, -.5f * pi, .5f * pi);
+	cam.trans.rotation.y -= sens *(x - w * .5f); //yaw
+	cam.trans.rotation.x -= sens * (y - h * .5f);// pitch
+	cam.trans.rotation.x = glm::clamp(cam.trans.rotation.x, -.5f * pi, .5f * pi);
 	glfwSetCursorPos(GLFWwindowPtr, w * .5f, h * .5f);
 
 	// move with arrows
 	
-	//glm::mat3 r = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
+	glm::mat3 r = (glm::mat3)glm::yawPitchRoll(cam.trans.rotation.y, cam.trans.rotation.x, cam.trans.rotation.z);
 	
-//	if (keyIsDown[GLFW_KEY_LEFT])
-//	{
-//		camVel += r *glm::vec3(-1, 0, 0); 
-//		cout << "left" << endl;
-//	}
-//	if (keyIsDown[GLFW_KEY_RIGHT])
-//	{
-//		camVel += r * glm::vec3(1, 0, 0); 
-//		cout << "right" << endl;
-//	}
-//	if (keyIsDown[GLFW_KEY_UP])
-//	{
-//		camVel += r * glm::vec3(0, 0, -1);
-//		cout << "up" << endl;
-//	}
-//	if (keyIsDown[GLFW_KEY_DOWN])
-//	{
-//		camVel += r* glm::vec3(0, 0, 1); 
-//		cout << "down" << endl;
-//	}
-//	float speed = 1.f;
-//	if (camVel != glm::vec3())
-//		camVel = glm::normalize(camVel) * speed;
+	if (keyIsDown[GLFW_KEY_LEFT])
+	{
+		cam.bod.velocity += r *glm::vec3(-1, 0, 0); 
+		cout << "left" << endl;
+	}
+	if (keyIsDown[GLFW_KEY_RIGHT])
+	{
+		cam.bod.velocity += r * glm::vec3(1, 0, 0);
+		cout << "right" << endl;
+	}
+	if (keyIsDown[GLFW_KEY_UP])
+	{
+		cam.bod.velocity += r * glm::vec3(0, 0, -1);
+		cout << "up" << endl;
+	}
+	if (keyIsDown[GLFW_KEY_DOWN])
+	{
+		cam.bod.velocity += r* glm::vec3(0, 0, 1);
+		cout << "down" << endl;
+	}
+	float speed = 1.f;
+	if (cam.bod.velocity != glm::vec3())
+		cam.bod.velocity = glm::normalize(camVel) * speed;
+
+	calcMat();
 }
