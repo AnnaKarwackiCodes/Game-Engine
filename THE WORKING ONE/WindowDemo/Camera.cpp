@@ -27,9 +27,14 @@ Camera::~Camera()
 {
 }
 
-void Camera::updateTrans(float delta)
+void Camera::updateTrans(float delta, glm::vec3 vel)
 {
-	vec = (camVel / delta) + cam.bod.velocity;
+	glm::mat3 r = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
+	float speed = 1.f;
+	if (camVel != glm::vec3())
+		camVel = glm::normalize(camVel) * speed;
+
+	vec = (vel / delta) + cam.bod.velocity;
 
 	accel = (vec - cam.bod.velocity) / delta;
 
@@ -41,7 +46,6 @@ void Camera::updateTrans(float delta)
 	glm::vec3 deltaR = cam.bod.velocity * delta;
 
 	cam.trans.location += deltaR;
-	camLoc += deltaR;
 	calcMat();
 }
 
@@ -70,7 +74,7 @@ void Camera::FPSControl(GLFWwindow* GLFWwindowPtr)
 	int w = 800, h = 600;
 	double x, y;
 	glfwGetCursorPos(GLFWwindowPtr, &x, &y);
-
+	
 	camRot.y -= sens *(x - w * .5f); //yaw
 	camRot.x -= sens * (y - h * .5f);// pitch
 	camRot.x = glm::clamp(camRot.x, -.5f * pi, .5f * pi);
@@ -78,18 +82,29 @@ void Camera::FPSControl(GLFWwindow* GLFWwindowPtr)
 
 	// move with arrows
 	
-	glm::mat3 r = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
+	//glm::mat3 r = (glm::mat3)glm::yawPitchRoll(camRot.y, camRot.x, camRot.z);
 	
-	if (keyIsDown[GLFW_KEY_LEFT])
-		camVel += r *glm::vec3(-1, 0, 0);
-	if (keyIsDown[GLFW_KEY_RIGHT])
-		camVel += r * glm::vec3(1, 0, 0);
-	if (keyIsDown[GLFW_KEY_UP])
-		camVel += r * glm::vec3(0, 0, -1);
-	if (keyIsDown[GLFW_KEY_DOWN])
-		camVel += r* glm::vec3(0, 0, 1);
-
-	float speed = 1.f;
-	if (camVel != glm::vec3())
-		camVel = glm::normalize(camVel) * speed;
+//	if (keyIsDown[GLFW_KEY_LEFT])
+//	{
+//		camVel += r *glm::vec3(-1, 0, 0); 
+//		cout << "left" << endl;
+//	}
+//	if (keyIsDown[GLFW_KEY_RIGHT])
+//	{
+//		camVel += r * glm::vec3(1, 0, 0); 
+//		cout << "right" << endl;
+//	}
+//	if (keyIsDown[GLFW_KEY_UP])
+//	{
+//		camVel += r * glm::vec3(0, 0, -1);
+//		cout << "up" << endl;
+//	}
+//	if (keyIsDown[GLFW_KEY_DOWN])
+//	{
+//		camVel += r* glm::vec3(0, 0, 1); 
+//		cout << "down" << endl;
+//	}
+//	float speed = 1.f;
+//	if (camVel != glm::vec3())
+//		camVel = glm::normalize(camVel) * speed;
 }

@@ -5,10 +5,12 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include "FreeImage.h"
-
+#include <iostream>
 #include <vector>
 #include <string>
 #include <map>
+using std::cout;
+using std::endl;
 class Camera
 {
 	struct Transform {
@@ -30,7 +32,7 @@ public:
 	Camera();
 	~Camera();
 	glm::mat4 upload;
-	void updateTrans(float delta);
+	void updateTrans(float delta, glm::vec3 vel);
 	void calcMat();
 	void uploadMat();
 	void FPSControl(GLFWwindow* GLFWwindowPtr);

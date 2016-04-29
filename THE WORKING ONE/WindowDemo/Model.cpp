@@ -18,7 +18,9 @@ Model::~Model()
 
 void Model::transMat()
 {
-	obj.trans.transMat = glm::translate(obj.trans.location) * glm::yawPitchRoll(obj.trans.rotation.x, obj.trans.rotation.y, obj.trans.rotation.z)* glm::scale(obj.trans.size);
+	obj.trans.transMat = glm::translate(obj.trans.location) * 
+		glm::yawPitchRoll(obj.trans.rotation.x, obj.trans.rotation.y, obj.trans.rotation.z)* 
+		glm::scale(obj.trans.size);
 }
 
 bool Model::render()
