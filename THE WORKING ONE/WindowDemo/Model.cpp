@@ -1,14 +1,20 @@
 #include "Model.h"
-
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 Model::Model()
 {
+	vertArr = 0;
+	vertCount = 0;
 }
 
 Model::Model(char * nm, int type)
 {
 	name = nm;
 	collisionType = type;
+	vertArr = 0;
+	vertCount = 0;
 }
 
 
@@ -25,65 +31,106 @@ void Model::transMat()
 
 bool Model::render()
 {
-	glBindTexture(GL_TEXTURE_2D, text.texID);
+	
 	glUniformMatrix4fv(3, 1, GL_FALSE, &obj.trans.transMat[0][0]);
+	
+	glBindTexture(GL_TEXTURE_2D, text.texID);
 	glBindVertexArray(vertArr);
 	glDrawArrays(GL_TRIANGLES, 0, vertCount);
-	glBindVertexArray(0);
-	glDrawArrays(GL_TRIANGLES, 0, vertCount);
+
+	//glBindVertexArray(vertArr);
+	//glDrawArrays(GL_TRIANGLES, 0, vertCount);
 
 	return true;
 }
 
-bool Model::bufferModel()
+bool Model::bufferModel(std::string objFile)
 {
-	// define model vertex locations
-	std::vector<glm::vec3> locs =
+	std::vector<glm::vec3> locations;
+	std::vector<glm::vec2> uvs;
+	std::vector<glm::vec3> normals;
+	std::vector<VertInds> VertInd;
+
+	std::string line;
+	std::ifstream inFile;
+	
+	inFile.open(objFile);
+	if (inFile.is_open())
 	{
-		{ 1,1,0 },
-		{ -1,1,0 },
-		{ -1,-1,0 },
-		{ 1,-1,0 }
-	};
-
-	std::vector <unsigned int> locInds = { 0,1,2, 0,2 ,3 };
-	vertCount = locInds.size();
-
-	// defining the UV points
-	std::vector<glm::vec2> locations =
-	{
-		{ 1,1 },
-		{ 0,1 },
-		{ 0,0 },
-		{ 1,0 }
-	};
-
-	std::vector <unsigned int> locationInds = { 0,1,2, 0,2 ,3 };
-
-	// Duplicate vertices into a  single buffer
-	//std::vector<Vertex> vertBufData(vertCount);
-	std::vector<Vertex> vertBufData(vertCount);
-	for (unsigned int i = 0; i < vertCount; i++)
-	{
-		vertBufData[i] = { locs[locInds[i]], locations[locationInds[i]] };
+		while (std::getline(inFile, line))
+		{
+			std::istringstream fileShit(line);
+			std::string label;
+			fileShit >> label;
+			if (label == "v") //location
+			{
+				float nums[3];
+				fileShit >> nums[0] >> nums[1] >> nums[2];
+				locations.push_back(glm::vec3(nums[0], nums[1], nums[2]));
+			}
+			else if (label == "vt")//uvs
+			{
+				float nums[2];
+				fileShit >> nums[0] >> nums[1];
+				uvs.push_back(glm::vec2(nums[0], nums[1]));
+			}
+			else if (label == "vn")//normal
+			{
+				float nums[3];
+				fileShit >> nums[0] >> nums[1] >> nums[2];
+				normals.push_back(glm::vec3(nums[0], nums[1], nums[2]));
+			}
+			else if (label == "f")//indices
+			{
+				unsigned int nums[3];
+				char slash[2];
+				for (int i = 0; i < 3; i++)
+				{
+					fileShit >> nums[0] >> slash[0] >> nums[1] >> slash[1] >> nums[2];
+					for (int i = 0; i < 3; i++)
+					{
+						nums[i]--;
+					}
+					VertInds vi = { nums[0],nums[1],nums[2] };
+					VertInd.push_back(vi);
+				}
+			}
+		}
+		inFile.close();
 	}
-
+	vertCount = VertInd.size();
+	std::vector<Vertex> vertBufData(vertCount);
+	for (int i = 0; i < vertCount; i++)
+	{
+		vertBufData[i] = {
+			locations[VertInd[i].locInd],
+			uvs[VertInd[i].uvInd],
+			normals[VertInd[i].normInd]
+		};
+	}
+	
 	GLuint vertBuf;
-
+	
 	glGenVertexArrays(1, &vertArr);
 	glGenBuffers(1, &vertBuf);
-
+	
 	glBindVertexArray(vertArr);
 	glBindBuffer(GL_ARRAY_BUFFER, vertBuf);
-
+	
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertCount, &vertBufData[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-
+	
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) sizeof(glm::vec3));
-
+	
 	glEnableVertexAttribArray(1);
+	
+
+	glEnableVertexAttribArray(2); //normal
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
 	glBindVertexArray(0);
+	//lighting stuff
+	//glVertexAttribPointer()
 
 	// color
 	glClearColor(0.392f, 0.584f, 0.929f, 1.0f);
@@ -93,11 +140,10 @@ bool Model::bufferModel()
 
 bool Model::setup()
 {
-	bufferModel();
 	text.loadTexture(name);
 	obj.trans.location = glm::vec3(0, 0, 0);
 	obj.trans.rotation = glm::vec3(0, 0, 0);
-	obj.trans.size = glm::vec3(.2, .2, 0);
+	obj.trans.size = glm::vec3(.2, .2, .2);
 
 	obj.bod.mass = 0.0f;
 	obj.bod.force = glm::vec3(0,0,0);
@@ -107,7 +153,6 @@ bool Model::setup()
 
 bool Model::setup(glm::vec3 loc, glm::vec3 rot, glm::vec3 size)
 {
-	bufferModel();
 	text.loadTexture(name);
 	obj.trans.location = loc;
 	obj.trans.rotation = rot;

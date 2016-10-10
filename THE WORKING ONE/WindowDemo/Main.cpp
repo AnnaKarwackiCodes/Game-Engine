@@ -12,7 +12,8 @@ int main()
 	if (engine.useShaders())
 	{
 		engine.loadModel();
+		engine.bufferModels();
 		engine.gameLoop();
 	}
-	return 0;
+     return 0;
 }

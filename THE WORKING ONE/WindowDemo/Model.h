@@ -8,10 +8,9 @@
 
 #include <vector>
 #include <string>
-
+#include <fstream>
 #include "ShaderManager.h"
 #include "Texture.h"
-
 #include <iostream>
 #include <map>
 #include <cmath>
@@ -37,7 +36,14 @@ class Model
 	struct Vertex {
 		glm::vec3 loc;
 		glm::vec2 uv;
+		glm::vec3 norm;
 	};
+	struct VertInds {
+		unsigned int locInd;
+		unsigned int uvInd;
+		unsigned int normInd;
+	};
+
 
 public:
 	Model();
@@ -45,7 +51,7 @@ public:
 	~Model();
 	void transMat();
 	bool render();
-	bool bufferModel();
+	bool bufferModel(std::string objFile);
 	bool setup();
 	bool setup(glm::vec3 loc, glm::vec3 size, glm::vec3 rot);
 	void newt(float delta, glm::vec3 dForce);
@@ -54,14 +60,12 @@ public:
 	bool CollideWith(const Model& mod);
 	int collisionType;
 	void TextureChange(char* nm);
+	Object obj;
 
 private:
-	Object obj;
 	Texture text;
 	GLuint vertArr;
 	unsigned int vertCount;
 	char* name;
 	glm::vec3 accel;
-	
 };
-
